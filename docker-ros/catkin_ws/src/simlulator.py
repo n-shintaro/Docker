@@ -10,9 +10,14 @@ dt = 0.5
 T = 200
 step=int(200/dt)
 # 壁の設定
-walls=[]
-wall1 = np.array([1, 1])
-walls.append(wall1)
+walls=np.array([[2, 8],[8, 8],[4, 3]])
+
+# 描画用の壁
+wall_draw= [[0 for i in enumerate(walls)] for j in  range(2)]
+for idxj, wall in enumerate(walls):
+    #import pdb; pdb.set_trace()
+    wall_draw[0][idxj]=wall[0]
+    wall_draw[1][idxj] = wall[1]
 # agentの設定
 agents = []
 # desiredV,actualV,pos,dest
@@ -28,6 +33,7 @@ ims = []
 # 相互作用を計算
 for i in range(step):
     positions = [[0 for i in range(2)] for j in enumerate(agents)]
+    destination = [[0 for i in range(2)] for j in enumerate(agents)]
     for idxi,ai in enumerate(agents):# idxi: インデックス　ai：要素
 
         # 初期速度と位置
@@ -45,7 +51,6 @@ for i in range(step):
                 continue
             peopleInter += ai.peopleInteraction(aj)
 
-
         # 障害物からの力
         wallInter=0.0
         for idxj,wall in enumerate(walls):
@@ -59,10 +64,12 @@ for i in range(step):
         #positions.append([ai.pos)
         positions[0][idxi]=ai.pos[0]
         positions[1][idxi] = ai.pos[1]
+        destination[0][idxi]=ai.dest[0]
+        destination[1][idxi] = ai.dest[1]
         #print("Agent"+str(idxi)+"位置="+str(ai.pos))
     im1 = plt.plot(positions[0],positions[1],"-o", linestyle='None', color='black')
-    im2 = plt.plot(wall1[0],wall1[1], "-o", linestyle='None', color='black')
-    #import pdb; pdb.set_trace()
+    im2 = plt.plot(walls[:, 0], walls[:, 1], "-o", linestyle='None', color='blue')
+    im3 = plt.plot(destination[0],destination[1], "x", linestyle='None', color='red', ms='10')
     im=im1+im2
     ims.append(im)
 ani = animation.ArtistAnimation(fig, ims, interval=200)

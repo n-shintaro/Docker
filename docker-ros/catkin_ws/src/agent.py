@@ -12,7 +12,7 @@ class Agent:
          self.dest = dest
          self.actualV =actualV
          self.bodyFactor = 1.0 # 弾性係数
-         self.slideFricFactor = 4 #散逸係数
+         self.slideFricFactor = 5 #散逸係数
          self.A = 0.2 # interaciton strength
          self.B = 8 #
 
@@ -49,13 +49,15 @@ class Agent:
 
  #　静的障害物からの力
      def wallInteraction(self, wall):
-        ri = self.radius
+        ri = self.radius+0.5
         diw = np.linalg.norm(self.pos - wall)
         niw = (self.pos - wall) / diw  # 正規化
-        diw = np.sqrt(np.dot(self.pos,wall))
-        first = (self.A*np.exp((ri-diw)/self.B) + self.bodyFactor*g(ri-diw))*niw
         tiw = np.array([-niw[1],niw[0]])
-        second = self.slideFricFactor * g(ri - diw) * (self.actualV * tiw) * tiw
-        #import pdb; pdb.set_trace()
+        if ri-diw > 0:
+            first = (self.A*np.exp((ri-diw)/self.B) + self.bodyFactor*(ri-diw))*niw
+            second = self.slideFricFactor * (ri - diw) * (self.actualV * tiw) * tiw
+        else:
+            first = (self.A * np.exp((ri - diw) / self.B)) * niw
+            second=0
         return first - second
 
