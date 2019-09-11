@@ -1,1 +1,2 @@
-sudo docker run --rm -it     --net host     -e DISPLAY=$DISPLAY     -v $HOME/.Xauthority:/root/.Xauthority     ros
+
+docker build --tag ros-kobuki:latest .
