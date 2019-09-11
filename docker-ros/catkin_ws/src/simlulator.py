@@ -10,14 +10,16 @@ dt = 0.5
 T = 200
 step=int(200/dt)
 # 壁の設定
-walls=np.array([[1,1]])
+walls=[]
+wall1 = np.array([1, 1])
+walls.append(wall1)
 # agentの設定
 agents = []
 # desiredV,actualV,pos,dest
-agent=Agent(0.1,np.array([0, 0]),np.array([0, 0]), np.array([10.0, 10.0]))
-agents.append(agent)
-agent=Agent(0.1,np.array([0, 0]),np.array([0, 10]), np.array([10.0, 0.0]))
-agents.append(agent)
+agent1=Agent(0.1,np.array([0, 0]),np.array([0, 0]), np.array([10.0, 10.0]))
+agents.append(agent1)
+agent2=Agent(0.1,np.array([0, 0]),np.array([0, 10]), np.array([10.0, 0.0]))
+agents.append(agent2)
 
 # 描画用
 fig = plt.figure()
@@ -47,23 +49,21 @@ for i in range(step):
         # 障害物からの力
         wallInter=0.0
         for idxj,wall in enumerate(walls):
-            #import pdb; pdb.set_trace()
             wallInter += ai.wallInteraction(wall)
-
         # 合力
-        sumForce = forcetogoal + peopleInter  #+ wallInter
-        #print(sumForce)
+        sumForce = forcetogoal + peopleInter + wallInter
+
         accl=sumForce/ai.mass #加速度の計算
         ai.actualV=v0+accl*dt #速度
         ai.pos = r0 + v0 * dt + 0.5 * accl * dt * dt  #位置
         #positions.append([ai.pos)
         positions[0][idxi]=ai.pos[0]
         positions[1][idxi] = ai.pos[1]
-        #import pdb; pdb.set_trace()
         #print("Agent"+str(idxi)+"位置="+str(ai.pos))
-    fig = plt.figure()
-    plt.plot(positions[0],positions[1],"-o", linestyle='None', color='black')
-    plt.plot(walls)
-    ims.append(fig)
+    im1 = plt.plot(positions[0],positions[1],"-o", linestyle='None', color='black')
+    im2 = plt.plot(wall1[0],wall1[1], "-o", linestyle='None', color='black')
+    #import pdb; pdb.set_trace()
+    im=im1+im2
+    ims.append(im)
 ani = animation.ArtistAnimation(fig, ims, interval=200)
 plt.show()

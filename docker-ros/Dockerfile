@@ -1,6 +1,6 @@
-#FROM ubuntu:16.04
+FROM ubuntu:16.04
 # install ros-kinetic
-FROM ros:kinetic
+#FROM ros:kinetic
 
 ################################################################################################
 ##                              ROS Kinetic-Desktop-Full Install                              ##
@@ -42,8 +42,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 #add environment setup
-RUN bin/bash -c "echo 'source /opt/ros/kinetic/setup.bash' >> .bashrc"
-RUN bin/bash -c "source .bashrc"
+RUN bin/bash -c "echo 'source /opt/ros/kinetic/setup.bash' >> .bashrc" && \
+bin/bash -c "source .bashrc"
 # Setup scatkin workspace
 #RUN /bin/bash -c "source /opt/ros/kinetics/setup.bash && \
 #                  cd /catkin_ws/ && \

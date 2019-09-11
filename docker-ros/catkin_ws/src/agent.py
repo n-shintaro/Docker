@@ -12,7 +12,7 @@ class Agent:
          self.dest = dest
          self.actualV =actualV
          self.bodyFactor = 1.0 # 弾性係数
-         self.slideFricFactor = 2 #散逸係数
+         self.slideFricFactor = 4 #散逸係数
          self.A = 0.2 # interaciton strength
          self.B = 8 #
 
@@ -52,10 +52,10 @@ class Agent:
         ri = self.radius
         diw = np.linalg.norm(self.pos - wall)
         niw = (self.pos - wall) / diw  # 正規化
-        #import pdb; pdb.set_trace()
         diw = np.sqrt(np.dot(self.pos,wall))
         first = (self.A*np.exp((ri-diw)/self.B) + self.bodyFactor*g(ri-diw))*niw
         tiw = np.array([-niw[1],niw[0]])
-        second = self.slideFricFactor*g(ri-diw)*(self.actualV*tiw)*tiw
+        second = self.slideFricFactor * g(ri - diw) * (self.actualV * tiw) * tiw
+        #import pdb; pdb.set_trace()
         return first - second
 
