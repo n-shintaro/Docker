@@ -126,6 +126,9 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/catkin_ws/build/gtest/cmake_install.cmake")
+  include("/catkin_ws/build/ar_track_alvar/ar_track_alvar_msgs/cmake_install.cmake")
+  include("/catkin_ws/build/sfm_navigation/cmake_install.cmake")
+  include("/catkin_ws/build/ar_track_alvar/ar_track_alvar/cmake_install.cmake")
 
 endif()
 

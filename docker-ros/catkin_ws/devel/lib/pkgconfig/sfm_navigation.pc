@@ -1,0 +1,8 @@
+prefix=/catkin_ws/devel
+
+Name: sfm_navigation
+Description: Description of sfm_navigation
+Version: 0.0.0
+Cflags: 
+Libs: -L/catkin_ws/devel/lib 
+Requires: 

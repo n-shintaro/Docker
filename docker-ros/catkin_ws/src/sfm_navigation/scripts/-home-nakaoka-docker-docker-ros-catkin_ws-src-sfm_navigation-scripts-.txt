@@ -1,0 +1,1 @@
+/home/nakaoka/docker/docker-ros/catkin_ws/src/sfm_navigation/scripts/sfm_navigation.py

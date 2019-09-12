@@ -45,8 +45,19 @@ RUN apt-get update && apt-get install -y \
     ros-kinetic-desktop-full \
     && rm -rf /var/lib/apt/lists/*
 
+# setup entrypoint
+COPY ./ros_entrypoint.sh /
+RUN chmod 777 /ros_entrypoint.sh
+ENTRYPOINT ["/ros_entrypoint.sh"]
+CMD ["bash"]
+
 #add environment setup
-RUN bin/bash -c "echo 'source /opt/ros/kinetic/setup.bash' >> ~/.bashrc"
+#RUN bin/bash -c "source /opt/ros/kinetic/setup.bash"
+#RUN echo 'source /opt/ros/kinetic/setup.bash' >> /.bashrc
+RUN echo "source /catkin_ws/devel/setup.bash" >> ~/.bashrc
+COPY .vimrc /root/
+RUN mkdir -p ~/.vim/undo && \
+    echo 'source ~/.vimrc' >> ~/.bashrc
    # source ~/.bashrc
 # Setup scatkin workspace
 #RUN /bin/bash -c "source /opt/ros/kinetics/setup.bash && \

@@ -1,1 +1,1 @@
-docker exec -it ros_nakaoka /bin/bash
+docker exec -it ros-nakaoka /bin/bash
