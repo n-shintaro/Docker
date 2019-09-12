@@ -2,9 +2,6 @@ FROM ubuntu:16.04
 # install ros-kinetic
 #FROM ros:kinetic
 
-# install vim
-RUN ["apt-get", "update"]
-RUN ["apt-get", "install", "-y", "vim"]
 
 ################################################################################################
 ##                              ROS Kinetic-Desktop-Full Install                              ##
@@ -55,9 +52,25 @@ CMD ["bash"]
 #RUN bin/bash -c "source /opt/ros/kinetic/setup.bash"
 #RUN echo 'source /opt/ros/kinetic/setup.bash' >> /.bashrc
 RUN echo "source /catkin_ws/devel/setup.bash" >> ~/.bashrc
+
+
+# install vim
+RUN ["apt-get", "update"]
+RUN ["apt-get", "install", "-y", "vim"]
+RUN mkdir -p ~/.vim/bundle && \
+    git clone https://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim
 COPY .vimrc /root/
 RUN mkdir -p ~/.vim/undo && \
     echo 'source ~/.vimrc' >> ~/.bashrc
+
+# install terminator
+RUN apt-get install terminator -y
+
+# alias install
+RUN echo 'source catkin_ws/alias.sh '>> ~/.bashrc
+
+
+
    # source ~/.bashrc
 # Setup scatkin workspace
 #RUN /bin/bash -c "source /opt/ros/kinetics/setup.bash && \

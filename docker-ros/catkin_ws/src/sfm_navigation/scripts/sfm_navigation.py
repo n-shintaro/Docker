@@ -40,8 +40,8 @@ class SFMNavigation:
     #   Calculate SFM
     #===========================================================================
 
-    def social_force_model(agents, walls):
-        cml_pos = geometry_msgs.msg.Point()
+    def social_force_model(self,agents, walls):
+        cml_pos =Point()
         # 相互作用を計算
         for i in range(step):
             r = rospy.Rate(20)     # 20Hz
@@ -75,7 +75,7 @@ class SFMNavigation:
 
                 # 位置をpublish
                 cml_pos.x = ai.pos[0]
-                cml_pos.y=i.pos[1]
+                cml_pos.y=ai.pos[1]
                 self.position_publisher.publish(cml_pos)
                 r.sleep()
 
