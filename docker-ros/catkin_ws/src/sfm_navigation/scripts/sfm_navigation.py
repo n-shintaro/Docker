@@ -6,12 +6,12 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from agent import *
 from config import *
-from geometry_msgs.msg import Point, Twist
+from geometry_msgs.msg import PointStamped, Twist
 #import pdb; pdb.set_trace()
 # global変数
 AGENTSNUM=5
-dt = 0.5
-T = 200
+dt = 0.4
+T = 2000
 step=int(200/dt)
 # 壁の設定
 walls=np.array([[3, 8],[8, 8],[4, 3]])
@@ -32,19 +32,18 @@ class SFMNavigation:
     def __init__(self):
         print "\n============== SFM Navigation ==============="
 
-        # Initialize node ------------------------------------------------------
-        rospy.init_node("sfm_navigation")
+
     # 速度指令 Publisher ----------------------------------------------------
-        self.position_publisher = rospy.Publisher('pos_vel', Point, queue_size=1)
+        self.position_publisher = rospy.Publisher('cml_pos', PointStamped, queue_size=10)
     #===========================================================================
     #   Calculate SFM
     #===========================================================================
 
     def social_force_model(self,agents, walls):
-        cml_pos =Point()
+        pointstamped = PointStamped()
         # 相互作用を計算
-        for i in range(step):
-            r = rospy.Rate(20)     # 20Hz
+        while not rospy.is_shutdown():
+            r = rospy.Rate(40)     # 20Hz
             for idxi,ai in enumerate(agents):# idxi: インデックス　ai：要素
 
                 # 初期速度と位置
@@ -52,7 +51,7 @@ class SFMNavigation:
                 r0 = ai.pos
                 ai.direction = normalize(ai.dest - ai.pos)
 
-                #　ゴールまでへの力
+                #ゴールまでへの力
                 forcetogoal=ai.adaptVel()
 
                 # 人との相互作用
@@ -66,6 +65,7 @@ class SFMNavigation:
                 wallInter=0.0
                 for idxj,wall in enumerate(walls):
                     wallInter += ai.wallInteraction(wall)
+                    print(wallInter)
                 # 合力
                 sumForce = forcetogoal + peopleInter + wallInter
 
@@ -74,14 +74,19 @@ class SFMNavigation:
                 ai.pos = r0 + v0 * dt + 0.5 * accl * dt * dt  #位置
 
                 # 位置をpublish
-                cml_pos.x = ai.pos[0]
-                cml_pos.y=ai.pos[1]
-                self.position_publisher.publish(cml_pos)
+                # 位置を指定
+                pointstamped.point.x = ai.pos[0]
+                pointstamped.point.y = ai.pos[1]
+                # フレームを指定
+                pointstamped.header.frame_id = "world"
+                self.position_publisher.publish(pointstamped)
                 r.sleep()
 
 ################################################################################
 #                               Main Function                                  #
 ################################################################################
 if __name__ == '__main__':
+    # Initialize node ------------------------------------------------------
+    rospy.init_node("sfm_navigation_node")
     robot   = SFMNavigation()
     robot.social_force_model(agents, walls)

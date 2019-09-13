@@ -39,8 +39,6 @@ class Agent:
             first = (self.A * np.exp((rij - dij) / self.B) + self.bodyFactor * (rij - dij)) * nij
             second = self.slideFricFactor * (rij - dij) * deltaVij * tij
             #import pdb; pdb.set_trace()
-            print("first=" + str(first))
-            print("second"+str(second))
             #first = (self.A*np.exp((rij-dij)/self.B) + self.bodyFactor*g(rij-dij))*nij
         else:
             first =(self.A * np.exp((rij - dij) / self.B))*nij

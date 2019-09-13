@@ -1,0 +1,5 @@
+<launch>
+    <arg name="rvizconfig" default="$(find sfm_navigation)/rviz/sfm_navigation.rviz"/>
+    <node pkg="sfm_navigation" type="sfm_navigation.py" name='sfm_navigation_node' output="screen"  />
+    <node pkg="rviz" name="rviz"  type="rviz" args="-d $(arg rvizconfig)" output="screen" />
+</launch>
