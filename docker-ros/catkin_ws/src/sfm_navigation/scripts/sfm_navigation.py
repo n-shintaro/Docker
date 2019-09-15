@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from agent import *
 from config import *
-from geometry_msgs.msg import PointStamped, Twist
+from geometry_msgs.msg import PoseArray, Pose
 #import pdb; pdb.set_trace()
 # global変数
 AGENTSNUM=5
@@ -34,15 +34,15 @@ class SFMNavigation:
 
 
     # 速度指令 Publisher ----------------------------------------------------
-        self.position_publisher = rospy.Publisher('cml_pos', PointStamped, queue_size=10)
+        self.position_publisher = rospy.Publisher('cml_pos', PoseArray, queue_size=10)
     #===========================================================================
     #   Calculate SFM
     #===========================================================================
 
     def social_force_model(self,agents, walls):
-        pointstamped = PointStamped()
         # 相互作用を計算
         while not rospy.is_shutdown():
+            posearray = PoseArray()
             r = rospy.Rate(40)     # 20Hz
             for idxi,ai in enumerate(agents):# idxi: インデックス　ai：要素
 
@@ -65,7 +65,7 @@ class SFMNavigation:
                 wallInter=0.0
                 for idxj,wall in enumerate(walls):
                     wallInter += ai.wallInteraction(wall)
-                    print(wallInter)
+                    #print(wallInter)
                 # 合力
                 sumForce = forcetogoal + peopleInter + wallInter
 
@@ -75,12 +75,15 @@ class SFMNavigation:
 
                 # 位置をpublish
                 # 位置を指定
-                pointstamped.point.x = ai.pos[0]
-                pointstamped.point.y = ai.pos[1]
+                #import pdb; pdb.set_trace()
+                pose = Pose()
+                pose.position.x = ai.pos[0]
+                pose.position.y=ai.pos[1]
+                posearray.poses.append(pose)
                 # フレームを指定
-                pointstamped.header.frame_id = "world"
-                self.position_publisher.publish(pointstamped)
-                r.sleep()
+                posearray.header.frame_id = "world"
+            self.position_publisher.publish(posearray)
+            r.sleep()
 
 ################################################################################
 #                               Main Function                                  #
@@ -88,5 +91,9 @@ class SFMNavigation:
 if __name__ == '__main__':
     # Initialize node ------------------------------------------------------
     rospy.init_node("sfm_navigation_node")
-    robot   = SFMNavigation()
+    robot = SFMNavigation()
     robot.social_force_model(agents, walls)
+
+
+# デバッグ用
+#import pdb; pdb.set_trace()

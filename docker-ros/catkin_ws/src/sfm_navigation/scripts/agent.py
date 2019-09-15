@@ -3,6 +3,7 @@
 import rospy
 import numpy as np
 from config import *
+from geometry_msgs.msg import Pose
 class Agent:
      def __init__(self,desiredV,actualV,pos,dest):
          # agent parameter
